@@ -6,9 +6,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import com.anvisics.jleveldb.ext.DBAccessor;
+import com.anvisics.jleveldb.ext.DBWriteBatch;
 import com.anvisics.jleveldb.ext.Options;
 import com.anvisics.jleveldb.ext.ReadOptions;
-import com.anvisics.jleveldb.ext.Slice;
 import com.anvisics.jleveldb.ext.Status;
 import com.anvisics.jleveldb.ext.WriteOptions;
 
@@ -17,7 +17,7 @@ public class LevelDBAccess {
 	
 	private static Boolean loaded = null;
 	
-	static boolean load() {
+	public static boolean load() {
         if (loaded != null) return loaded == Boolean.TRUE;
 
         String libpath = System.getProperty("com.anvisics.jleveldb.lib.path");
@@ -46,7 +46,7 @@ public class LevelDBAccess {
             osname = "solaris";
         if (osarch.startsWith("i") && osarch.endsWith("86"))
             osarch = "x86";
-        libname = osname + '-' + osarch + ".lib";
+        libname = "jleveldb-" + osname + '-' + osarch + ".lib";
 
         // try a bundled library
         try {
@@ -72,13 +72,20 @@ public class LevelDBAccess {
         loaded = Boolean.FALSE;
         return false;
     }
+	
+	public static DBAccessor getDBAcessor(){
+		if(!load()){
+			throw new IllegalStateException("Native library not found.");
+		}
+		DBAccessor dbs = new DBAccessor();
+		return dbs;
+	}
 
 	public static void main(String[] args) {
-		load();
-		DBAccessor dbAccessor = new DBAccessor();
+		DBAccessor dbAccessor = getDBAcessor();
 		Options options = new Options();
 		options.setCreate_if_missing(true);
-		Status status = dbAccessor.open(options, "/home/victor/projects/OsmAnd/navigation_ws/JavaLevelDB/db");
+		Status status = dbAccessor.Open(options, "/home/victor/projects/OsmAnd/navigation_ws/JavaLevelDB/db");
 
 		if (!status.ok()) {
 			System.out.println(status.ToString());
@@ -88,17 +95,16 @@ public class LevelDBAccess {
 		ReadOptions ro = new ReadOptions();
 		
 		long ms = System.currentTimeMillis();
-		
 
-		for (int i = 5; i < 1000; i++){ 
-//			Slice key = new Slice(i + "");
-			dbAccessor.Put(opts, i + "", (i * i) + "фыва");
-//			System.out.println("key " + key.ToString());
-			String val = dbAccessor.Get(ro, i+"");
-			if(!val.equals(i*i+"фыва")){
-				System.out.println("!!!");
-			}
+		DBWriteBatch updates = new DBWriteBatch();
+
+		for (int i = 5; i < 1000000; i++){ 
+//			dbAccessor.Put(opts, i + "", (i * i) + "фыва");
+			updates.Put(i+"", (i * i) + "фыва");
 		}
+		
+		dbAccessor.Write(opts, updates);
+		updates.delete();
 		
 		for (int i = 0; i < 10; i++) {
 			String value = dbAccessor.Get(ro, i + "");

@@ -75,13 +75,14 @@ namespace leveldb {
     // Default: NULL
     //const Snapshot* snapshot;
   };
- 
-
- /* %nodefaultctor; 
-  class DB {
-    public:
+  
+  %nodefaultctor;
+  class WriteBatch {
   };
-  %clearnodefaultctor; */ 
+  
+  class DB {
+  };
+  %clearnodefaultctor;
 
 }
 
@@ -90,33 +91,29 @@ namespace leveldb {
  namespace leveldb {
  
    class DBWriteBatch {
-      private :
-     WriteBatch wb;
       public:
+       WriteBatch wb;
        // Store the mapping "key->value" in the database.
-       void put(const std::string key, const std::string value) {
+       void Put(const std::string key, const std::string value) {
           wb.Put(Slice(key), Slice(value));
        }
-       
-       void delete(std::string key) {
+       void Delete(std::string key) {
           wb.Delete(Slice(key));
        }
-       
-       void clear() {
+       void Clear() {
           wb.Clear();
        }
    };
 
-
   class DBAccessor {
     public :
      DB* pointer;
-     Status open(const Options& options,
+     Status Open(const Options& options,
                      const std::string& name) {
 	    return DB::Open(options, name, &pointer);
      }
      
-      char const* get(const ReadOptions& options, const std::string key) {
+      char const* Get(const ReadOptions& options, const std::string key) {
           std::string val;
           Status st = pointer -> Get(options, Slice(key), &val);
           if(st.ok()) {
@@ -126,16 +123,15 @@ namespace leveldb {
           }          
       }
        
-      Status write(const WriteOptions& options, WriteBatch* updates) {
-          return pointer -> Write(options, updates);
+      Status Write(const WriteOptions& options, DBWriteBatch& updates) {
+          return pointer -> Write(options, &updates.wb);
       } 
       
-      Status put(const WriteOptions& options, const std::string key, const std::string value) {
-          // printf("- %s %s\n - ", key.c_str(), value.c_str());
+      Status Put(const WriteOptions& options, const std::string key, const std::string value) {
           return pointer -> Put(options, Slice(key), Slice(value));
       }
       
-      Status delete(const WriteOptions& options, const std::string key) {
+      Status Delete(const WriteOptions& options, const std::string key) {
           return pointer -> Delete(options, Slice(key));
       }
        
