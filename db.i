@@ -133,10 +133,10 @@ namespace leveldb {
          void Prev() { return it-> Prev(); }
          
          // REQUIRES: Valid()
-         std::string key() { return it->key().ToString(); }
+         char const* key() { return std::string(it->key().data(), it->key().size()).c_str(); }
          
          // REQUIRES: !AtEnd() && !AtStart()
-         std::string value() { return it->value().ToString(); }
+         char const* value() { return std::string(it->value().data(), it->value().size()).c_str(); }
          
          // If an error has occurred, return it.  Else return an ok status.
          Status status() { return it->status(); }
