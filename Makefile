@@ -17,12 +17,12 @@
 
 include Makefile.vars
 
-default : build/$(LIBNAME)
+default : native
 
 native : build/$(LIBNAME) build/$(jleveldb)-native.jar
 
 build/$(LIBNAME) : build/obj build/obj/db_wrap.o
-	g++ -shared build/obj/*.o -o build/$(LIBNAME)
+	$(CC) $(LINKFLAGS) build/obj/*.o -o build/$(LIBNAME)
 	cp build/$(LIBNAME) src/
 
 build/obj : build/$(leveldb)/Makefile
@@ -34,7 +34,7 @@ build/$(leveldb)/Makefile :
 	svn checkout http://leveldb.googlecode.com/svn/trunk/ build/$(leveldb)
 
 build/obj/db_wrap.o : build/db_wrap.cpp
-	g++ -c -fpic build/db_wrap.cpp -I$(JAVA_HOME)/include/ -Ibuild/leveldb/include/ -o build/obj/db_wrap.o; 
+	$(CC) $(CFLAGS) -Ibuild/leveldb/include/ build/db_wrap.cpp -o build/obj/db_wrap.o; 
 	
 build/db_wrap.cpp : db.i
 	rm -rf src/com/anvisics/jleveldb/ext
@@ -56,11 +56,6 @@ build/$(target)/$(LIBNAME): build/$(leveldb)-$(target)/libleveldb.a build/com/an
 	$(STRIP) build/$(target)/$(LIBNAME)
 
 
-build/$(leveldb)-$(target)/libleveldb.a:
-	@mkdir -p build/$(leveldb)-$(target)
-	cp build/$(leveldb)/libleveldb.a build/$(leveldb)-$(target)/libleveldb.a
-  
-
 build/com/%.class: src/com/%.java
 	@mkdir -p build
 	$(JAVAC) -source 1.2 -target 1.2 -sourcepath src -d build $<
@@ -71,4 +66,4 @@ build/test/%.class: src/test/%.java
 	    -sourcepath src/test -d build $<
 
 clean:
-	rm -rf build dist
+	rm -rf build
