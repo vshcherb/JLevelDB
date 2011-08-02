@@ -97,7 +97,7 @@ namespace leveldb {
       public:
        WriteBatch wb;
        // Store the mapping "key->value" in the database.
-       void Put(const std::string key, const std::string value) {
+       void Put(const char* key, std::string value) {
           wb.Put(Slice(key), Slice(value));
        }
        void Delete(std::string key) {
@@ -133,10 +133,13 @@ namespace leveldb {
          void Prev() { return it-> Prev(); }
          
          // REQUIRES: Valid()
-         char const* key() { return std::string(it->key().data(), it->key().size()).c_str(); }
+         char const* key() { return it->key().ToString().c_str(); }
          
          // REQUIRES: !AtEnd() && !AtStart()
-         char const* value() { return std::string(it->value().data(), it->value().size()).c_str(); }
+         char const* value() {
+                std::string str(it->value().data(), it->value().size());
+                printf("\n--- %s", str.c_str());
+         		return str.c_str(); }
          
          // If an error has occurred, return it.  Else return an ok status.
          Status status() { return it->status(); }
@@ -151,7 +154,7 @@ namespace leveldb {
 	    return DB::Open(options, name, &pointer);
      }
      
-      char const* Get(const ReadOptions& options, const std::string key) {
+      char const* Get(const ReadOptions& options, char const* key) {
           std::string val;
           Status st = pointer -> Get(options, Slice(key), &val);
           if(st.ok()) {
