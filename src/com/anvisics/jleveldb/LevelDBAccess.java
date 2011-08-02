@@ -6,11 +6,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import com.anvisics.jleveldb.ext.DBAccessor;
-import com.anvisics.jleveldb.ext.DBWriteBatch;
-import com.anvisics.jleveldb.ext.Options;
-import com.anvisics.jleveldb.ext.ReadOptions;
-import com.anvisics.jleveldb.ext.Status;
-import com.anvisics.jleveldb.ext.WriteOptions;
 
 
 public class LevelDBAccess {

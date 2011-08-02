@@ -6,7 +6,7 @@
 #
 # To combine these, type:
 # 	  cd build
-# 	  mv LIBNAME linux-x86.lib (or win-x86.lib, freebsd-ppc.lib, mac.lib, etc)
+# 	  mv LIBNAME jleveldb-linux-x86.lib (or jleveldb-win-x86.lib, jleveldb-freebsd-ppc.lib, jleveldb-mac.lib, etc)
 #     java uf jleveldb-vXXX.jar linux-x86.lib
 #
 # The first is the native library, the second is the java support files.
@@ -17,17 +17,33 @@
 
 include Makefile.vars
 
-default: test
+default : build/$(LIBNAME)
 
-test: native $(test_classes)
-	$(JAVA) -Djava.library.path=build/$(target) \
-	    -cp "build/$(sqlitejdbc)-native.jar$(sep)build$(sep)$(libjunit)" \
-	    org.junit.runner.JUnitCore $(tests)
+native : build/$(LIBNAME) build/$(jleveldb)-native.jar
 
-native: build/$(jleveldb)-native.jar build/$(target)/$(LIBNAME)
+build/$(LIBNAME) : build/obj build/obj/db_wrap.o
+	g++ -shared build/obj/*.o -o build/$(LIBNAME)
+	cp build/$(LIBNAME) src/
 
+build/obj : build/$(leveldb)/Makefile
+	cd build/$(leveldb) && $(MAKE) -f Makefile
+	mkdir build/obj 
+	cd build/obj && ar -x ../$(leveldb)/libleveldb.a 
+
+build/$(leveldb)/Makefile :
+	svn checkout http://leveldb.googlecode.com/svn/trunk/ build/$(leveldb)
+
+build/obj/db_wrap.o : build/db_wrap.cpp
+	g++ -c -fpic build/db_wrap.cpp -I$(JAVA_HOME)/include/ -Ibuild/leveldb/include/ -o build/obj/db_wrap.o; 
+	
+build/db_wrap.cpp : db.i
+	rm -rf src/com/anvisics/jleveldb/ext
+	mkdir src/com/anvisics/jleveldb/ext
+	swig -c++ -java -package com.anvisics.jleveldb.ext -outdir src/com/anvisics/jleveldb/ext -o build/db_wrap.cpp db.i;
+	
 build/$(jleveldb)-native.jar: $(java_classes)
 	cd build && jar cf $(jleveldb)-native.jar $(java_classlist)
+
 
 # build/$(leveldb)-$(target)
 build/$(target)/$(LIBNAME): build/$(leveldb)-$(target)/libleveldb.a build/com/anvisics/jleveldb/NativeLevelDB.class

@@ -140,7 +140,6 @@ namespace leveldb {
          
          // If an error has occurred, return it.  Else return an ok status.
          Status status() { return it->status(); }
-   
    };
 
 
