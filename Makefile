@@ -41,19 +41,8 @@ build/db_wrap.cpp : db.i
 	mkdir src/com/anvisics/jleveldb/ext
 	swig -c++ -java -package com.anvisics.jleveldb.ext -outdir src/com/anvisics/jleveldb/ext -o build/db_wrap.cpp db.i;
 	
-build/$(jleveldb)-native.jar: $(java_classes)
-	cd build && jar cf $(jleveldb)-native.jar $(java_classlist)
-
-
-# build/$(leveldb)-$(target)
-build/$(target)/$(LIBNAME): build/$(leveldb)-$(target)/libleveldb.a build/com/anvisics/jleveldb/NativeLevelDB.class
-	@mkdir -p build/$(target)
-	$(JAVAH) -classpath build -jni -o build/NativeLevelDB.h com.anvisics.jleveldb.NativeLevelDB
-	$(CC) $(CFLAGS) -c -o build/$(target)/NativeLevelDB.o \
-		src/com/anvisics/jleveldb/NativeLevelDB.c
-	$(CC) $(CFLAGS) $(LINKFLAGS) -o build/$(target)/$(LIBNAME) \
-		build/$(target)/NativeLevelDB.o build/$(leveldb)-$(target)/libleveldb.a:
-	$(STRIP) build/$(target)/$(LIBNAME)
+build/$(jleveldb)-native.jar: $(java_classes) build/$(LIBNAME)
+	cd build && jar cf $(jleveldb)-native.jar $(java_classlist) $(LIBNAME)
 
 
 build/com/%.class: src/com/%.java
@@ -67,3 +56,15 @@ build/test/%.class: src/test/%.java
 
 clean:
 	rm -rf build
+
+## Example	
+## build/$(target)/$(LIBNAME): build/$(leveldb)-$(target)/libleveldb.a build/com/anvisics/jleveldb/NativeLevelDB.class
+#	@mkdir -p build/$(target)
+#	$(JAVAH) -classpath build -jni -o build/NativeLevelDB.h com.anvisics.jleveldb.NativeLevelDB
+#	$(CC) $(CFLAGS) -c -o build/$(target)/NativeLevelDB.o \
+#		src/com/anvisics/jleveldb/NativeLevelDB.c
+#	$(CC) $(CFLAGS) $(LINKFLAGS) -o build/$(target)/$(LIBNAME) \
+#		build/$(target)/NativeLevelDB.o build/$(leveldb)-$(target)/libleveldb.a:
+#	$(STRIP) build/$(target)/$(LIBNAME)
+
+	
