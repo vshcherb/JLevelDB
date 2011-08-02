@@ -82,6 +82,8 @@ namespace leveldb {
   
   class DB {
   };
+  class Iterator {
+  };
   %clearnodefaultctor;
 
 }
@@ -89,6 +91,7 @@ namespace leveldb {
 
 %inline %{
  namespace leveldb {
+ 
  
    class DBWriteBatch {
       public:
@@ -104,9 +107,45 @@ namespace leveldb {
           wb.Clear();
        }
    };
+   
+   class DBIterator {
+       friend class DBAccessor;
+       Iterator* it;
+       DBIterator(Iterator* i) {
+         it = i;
+       }
+       public :
+       ~DBIterator() { delete it; } 
+         // An iterator is either positioned at a key/value pair, or not valid.  
+         bool Valid() { return it->Valid(); }
+         
+         void SeekToFirst() { return it->SeekToFirst(); }
+         
+         void SeekToLast() { return it->SeekToLast(); }
+         
+         void Seek(const std::string& str) { return it->Seek(Slice(str)); }
+  
+         // REQUIRES: Valid()       
+         void Next() { return it-> Next(); }
+         
+         // REQUIRES: Valid()
+         // After this call, Valid() istrue iff the iterator was not positioned at the first entry in source.
+         void Prev() { return it-> Prev(); }
+         
+         // REQUIRES: Valid()
+         std::string key() { return it->key().ToString(); }
+         
+         // REQUIRES: !AtEnd() && !AtStart()
+         std::string value() { return it->value().ToString(); }
+         
+         // If an error has occurred, return it.  Else return an ok status.
+         Status status() { return it->status(); }
+   
+   };
 
-  class DBAccessor {
-    public :
+
+   class DBAccessor {
+     public :
      DB* pointer;
      Status Open(const Options& options,
                      const std::string& name) {
@@ -135,6 +174,11 @@ namespace leveldb {
           return pointer -> Delete(options, Slice(key));
       }
        
+      // Return a heap-allocated iterator over the contents of the database.
+  	  // Caller should delete the iterator when it is no longer needed.
+      DBIterator* NewIterator(const ReadOptions& options) {
+         return new DBIterator(pointer -> NewIterator(options));
+      };
   };
 
  }

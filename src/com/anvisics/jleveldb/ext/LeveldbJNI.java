@@ -46,6 +46,7 @@ class LeveldbJNI {
   public final static native void delete_ReadOptions(long jarg1);
   public final static native void delete_WriteBatch(long jarg1);
   public final static native void delete_DB(long jarg1);
+  public final static native void delete_Iterator(long jarg1);
   public final static native void DBWriteBatch_wb_set(long jarg1, DBWriteBatch jarg1_, long jarg2, WriteBatch jarg2_);
   public final static native long DBWriteBatch_wb_get(long jarg1, DBWriteBatch jarg1_);
   public final static native void DBWriteBatch_Put(long jarg1, DBWriteBatch jarg1_, String jarg2, String jarg3);
@@ -53,6 +54,16 @@ class LeveldbJNI {
   public final static native void DBWriteBatch_Clear(long jarg1, DBWriteBatch jarg1_);
   public final static native long new_DBWriteBatch();
   public final static native void delete_DBWriteBatch(long jarg1);
+  public final static native void delete_DBIterator(long jarg1);
+  public final static native boolean DBIterator_Valid(long jarg1, DBIterator jarg1_);
+  public final static native void DBIterator_SeekToFirst(long jarg1, DBIterator jarg1_);
+  public final static native void DBIterator_SeekToLast(long jarg1, DBIterator jarg1_);
+  public final static native void DBIterator_Seek(long jarg1, DBIterator jarg1_, String jarg2);
+  public final static native void DBIterator_Next(long jarg1, DBIterator jarg1_);
+  public final static native void DBIterator_Prev(long jarg1, DBIterator jarg1_);
+  public final static native String DBIterator_key(long jarg1, DBIterator jarg1_);
+  public final static native String DBIterator_value(long jarg1, DBIterator jarg1_);
+  public final static native long DBIterator_status(long jarg1, DBIterator jarg1_);
   public final static native void DBAccessor_pointer_set(long jarg1, DBAccessor jarg1_, long jarg2, DB jarg2_);
   public final static native long DBAccessor_pointer_get(long jarg1, DBAccessor jarg1_);
   public final static native long DBAccessor_Open(long jarg1, DBAccessor jarg1_, long jarg2, Options jarg2_, String jarg3);
@@ -60,6 +71,7 @@ class LeveldbJNI {
   public final static native long DBAccessor_Write(long jarg1, DBAccessor jarg1_, long jarg2, WriteOptions jarg2_, long jarg3, DBWriteBatch jarg3_);
   public final static native long DBAccessor_Put(long jarg1, DBAccessor jarg1_, long jarg2, WriteOptions jarg2_, String jarg3, String jarg4);
   public final static native long DBAccessor_Delete(long jarg1, DBAccessor jarg1_, long jarg2, WriteOptions jarg2_, String jarg3);
+  public final static native long DBAccessor_NewIterator(long jarg1, DBAccessor jarg1_, long jarg2, ReadOptions jarg2_);
   public final static native long new_DBAccessor();
   public final static native void delete_DBAccessor(long jarg1);
 }

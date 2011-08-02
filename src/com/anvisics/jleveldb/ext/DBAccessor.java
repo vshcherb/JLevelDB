@@ -64,6 +64,11 @@ public class DBAccessor {
     return new Status(LeveldbJNI.DBAccessor_Delete(swigCPtr, this, WriteOptions.getCPtr(options), options, key), true);
   }
 
+  public DBIterator NewIterator(ReadOptions options) {
+    long cPtr = LeveldbJNI.DBAccessor_NewIterator(swigCPtr, this, ReadOptions.getCPtr(options), options);
+    return (cPtr == 0) ? null : new DBIterator(cPtr, false);
+  }
+
   public DBAccessor() {
     this(LeveldbJNI.new_DBAccessor(), true);
   }
