@@ -28,7 +28,7 @@ public class TestDBAccess {
 
 		for (int i = 5; i < 1000; i++) {
 			// dbAccessor.Put(opts, i + "", (i * i) + "фыва");
-			updates.Put(i + "", (i * i) + "");
+			updates.Put((i % 2) +""+ i + "", (i * i) + "");
 		}
 
 		dbAccessor.Write(opts, updates);
@@ -40,12 +40,10 @@ public class TestDBAccess {
 		}
 
 		DBIterator it = dbAccessor.NewIterator(ro);
-		it.SeekToFirst();
-		int i = 0;
-		while (it.Valid() && i < 50) {
+		it.Seek("123");
+		
+		for (int i = 0; i < 10; i++) {
 			System.out.println(it.key() + " " + it.value());
-			i++;
-			it.Next();
 		}
 
 		it.delete();

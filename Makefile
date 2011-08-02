@@ -19,7 +19,7 @@ include Makefile.vars
 
 default : native
 
-native : build/$(LIBNAME) build/$(jleveldb)-native.jar
+native : build/$(LIBNAME) build/$(jleveldb).jar
 
 build/$(LIBNAME) : build/obj build/obj/db_wrap.o
 	$(CC) $(LINKFLAGS) build/obj/*.o -o build/$(LIBNAME)
@@ -41,8 +41,8 @@ build/db_wrap.cpp : db.i
 	mkdir src/com/anvisics/jleveldb/ext
 	swig -c++ -java -package com.anvisics.jleveldb.ext -outdir src/com/anvisics/jleveldb/ext -o build/db_wrap.cpp db.i;
 	
-build/$(jleveldb)-native.jar: $(java_classes) build/$(LIBNAME)
-	cd build && jar cf $(jleveldb)-native.jar $(java_classlist) $(LIBNAME)
+build/$(jleveldb).jar: $(java_classes) build/$(LIBNAME)
+	cd build && jar cf $(jleveldb).jar $(java_classlist) $(LIBNAME)
 
 
 build/com/%.class: src/com/%.java
