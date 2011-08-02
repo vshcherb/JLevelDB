@@ -28,7 +28,7 @@ public class TestDBAccess {
 
 		for (int i = 5; i < 1000; i++) {
 			// dbAccessor.Put(opts, i + "", (i * i) + "фыва");
-			updates.Put(i + "", (i * i) + "фыва");
+			updates.Put(i + "", (i * i) + "");
 		}
 
 		dbAccessor.Write(opts, updates);
