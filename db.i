@@ -88,7 +88,6 @@ namespace leveldb {
 
 }
 
-
 %inline %{
  namespace leveldb {
  
@@ -97,10 +96,10 @@ namespace leveldb {
       public:
        WriteBatch wb;
        // Store the mapping "key->value" in the database.
-       void Put(const char* key, std::string value) {
+       void Put(const char* key, const char* value) {
           wb.Put(Slice(key), Slice(value));
        }
-       void Delete(std::string key) {
+       void Delete(const char* key) {
           wb.Delete(Slice(key));
        }
        void Clear() {
@@ -133,47 +132,50 @@ namespace leveldb {
          void Prev() { return it-> Prev(); }
          
          // REQUIRES: Valid()
-         char const* key() { return it->key().ToString().c_str(); }
+         std::string key() { return it->key().ToString(); }
          
          // REQUIRES: !AtEnd() && !AtStart()
-         char const* value() {
-                std::string str(it->value().data(), it->value().size());
-                printf("\n--- %s", str.c_str());
-         		return str.c_str(); }
+         std::string value() {
+                // be very strict because ToString can be destroyed
+                // std::string str(it->value().data(), it->value().size());
+         		// return str;
+         		return it->value().ToString();
+          }
          
          // If an error has occurred, return it.  Else return an ok status.
          Status status() { return it->status(); }
    };
 
 
+
    class DBAccessor {
      public :
      DB* pointer;
+     Status lastStatus;
      Status Open(const Options& options,
                      const std::string& name) {
 	    return DB::Open(options, name, &pointer);
      }
      
-      char const* Get(const ReadOptions& options, char const* key) {
+     std::string Get(const ReadOptions& options, char const* key) {
           std::string val;
-          Status st = pointer -> Get(options, Slice(key), &val);
-          if(st.ok()) {
-             return val.c_str();
-          } else {
-             return NULL;
-          }          
+          lastStatus = pointer -> Get(options, Slice(key), &val);
+          return val;
       }
        
       Status Write(const WriteOptions& options, DBWriteBatch& updates) {
-          return pointer -> Write(options, &updates.wb);
+          lastStatus=pointer -> Write(options, &updates.wb);
+          return lastStatus;
       } 
       
       Status Put(const WriteOptions& options, const std::string key, const std::string value) {
-          return pointer -> Put(options, Slice(key), Slice(value));
+          lastStatus=pointer -> Put(options, Slice(key), Slice(value));
+          return lastStatus;
       }
       
       Status Delete(const WriteOptions& options, const std::string key) {
-          return pointer -> Delete(options, Slice(key));
+           lastStatus=pointer -> Delete(options, Slice(key));
+           return lastStatus;
       }
        
       // Return a heap-allocated iterator over the contents of the database.

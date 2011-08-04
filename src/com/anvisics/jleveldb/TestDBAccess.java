@@ -28,12 +28,12 @@ public class TestDBAccess {
 
 		for (int i = 5; i < 1000; i++) {
 			// dbAccessor.Put(opts, i + "", (i * i) + "фыва");
-			updates.Put(i+"", (i * i) + "[[275830317,275830320,275830323,275830325,275830317],{\"building\":\"yes\",\"addr:street\":\"Партизанский просп.\",\"addr:housenumber\":\"152\"}]");
+			updates.Put(i+"", (i * i) + "[[275830317,275830320,275830323,275830325,275830317],{\"building	\":\"yes\",\"addr:street\":\"Партизанский просп.\",\"addr:housenumber\":\"152\"}]");
 		}
 
 		dbAccessor.Write(opts, updates);
 		updates.delete();
-
+		ro.setVerify_checksums(true);
 		for (int i = 0; i < 10; i++) {
 			String value = dbAccessor.Get(ro, i + "");
 			System.out.println(value);

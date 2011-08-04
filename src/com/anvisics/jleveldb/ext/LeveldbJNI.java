@@ -66,6 +66,8 @@ class LeveldbJNI {
   public final static native long DBIterator_status(long jarg1, DBIterator jarg1_);
   public final static native void DBAccessor_pointer_set(long jarg1, DBAccessor jarg1_, long jarg2, DB jarg2_);
   public final static native long DBAccessor_pointer_get(long jarg1, DBAccessor jarg1_);
+  public final static native void DBAccessor_lastStatus_set(long jarg1, DBAccessor jarg1_, long jarg2, Status jarg2_);
+  public final static native long DBAccessor_lastStatus_get(long jarg1, DBAccessor jarg1_);
   public final static native long DBAccessor_Open(long jarg1, DBAccessor jarg1_, long jarg2, Options jarg2_, String jarg3);
   public final static native String DBAccessor_Get(long jarg1, DBAccessor jarg1_, long jarg2, ReadOptions jarg2_, String jarg3);
   public final static native long DBAccessor_Write(long jarg1, DBAccessor jarg1_, long jarg2, WriteOptions jarg2_, long jarg3, DBWriteBatch jarg3_);

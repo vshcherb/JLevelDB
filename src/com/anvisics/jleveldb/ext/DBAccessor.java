@@ -44,6 +44,15 @@ public class DBAccessor {
     return (cPtr == 0) ? null : new DB(cPtr, false);
   }
 
+  public void setLastStatus(Status value) {
+    LeveldbJNI.DBAccessor_lastStatus_set(swigCPtr, this, Status.getCPtr(value), value);
+  }
+
+  public Status getLastStatus() {
+    long cPtr = LeveldbJNI.DBAccessor_lastStatus_get(swigCPtr, this);
+    return (cPtr == 0) ? null : new Status(cPtr, false);
+  }
+
   public Status Open(Options options, String name) {
     return new Status(LeveldbJNI.DBAccessor_Open(swigCPtr, this, Options.getCPtr(options), options, name), true);
   }
