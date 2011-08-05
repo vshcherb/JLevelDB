@@ -6,7 +6,7 @@ That project provides tiny access to library making transparent access to C++ [c
 How to build
 --------------------
 Checkout the project and run in command line : 
-'make' - checkout leveldb project from svn, compile it and build ready to use jar.
+        'make' - checkout leveldb project from svn, compile it and build ready to use jar.
 
 Build is only tested under Linux. 
 Possible problems : 
