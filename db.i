@@ -20,7 +20,7 @@ namespace leveldb {
   %nodefaultdtor Snapshot;
   class Snapshot {
   };
-  %clearnodefaultctor;
+  %clearnodefaultctor;  
 
   struct WriteOptions {
     WriteOptions();
@@ -38,9 +38,10 @@ namespace leveldb {
     
     %rename(postWriteSnapshot) post_write_snapshot;
     const Snapshot** post_write_snapshot;
+    
    };
    
-
+   
   class Status {
     public :
     // Returns true iff the status indicates success.
@@ -232,6 +233,13 @@ namespace leveldb {
       }
       
   };
+  
+  Snapshot* getSnapshotValue(Snapshot** p) {
+      if(p == NULL) {
+          return NULL;
+      }
+      return *p;
+  }
 
  }
  

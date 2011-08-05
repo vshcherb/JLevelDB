@@ -85,4 +85,5 @@ class LeveldbJNI {
   public final static native String DBAccessor_getProperty(long jarg1, DBAccessor jarg1_, String jarg2);
   public final static native long new_DBAccessor();
   public final static native void delete_DBAccessor(long jarg1);
+  public final static native long getSnapshotValue(long jarg1);
 }

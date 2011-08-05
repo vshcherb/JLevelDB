@@ -17,4 +17,9 @@ public class Leveldb {
     return new Status(LeveldbJNI.RepairDB(dbname, Options.getCPtr(options), options), true);
   }
 
+  public static Snapshot getSnapshotValue(SWIGTYPE_p_p_leveldb__Snapshot p) {
+    long cPtr = LeveldbJNI.getSnapshotValue(SWIGTYPE_p_p_leveldb__Snapshot.getCPtr(p));
+    return (cPtr == 0) ? null : new Snapshot(cPtr, false);
+  }
+
 }
