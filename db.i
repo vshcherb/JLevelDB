@@ -85,6 +85,12 @@ namespace leveldb {
   class Iterator {
   };
   %clearnodefaultctor;
+  
+  // Destroy the contents of the specified database.
+  // Be very careful using this method.
+  Status DestroyDB(const std::string& name, const Options& options);
+
+  Status RepairDB(const std::string& dbname, const Options& options);
 
 }
 

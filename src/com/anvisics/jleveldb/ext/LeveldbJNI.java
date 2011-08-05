@@ -47,6 +47,8 @@ class LeveldbJNI {
   public final static native void delete_WriteBatch(long jarg1);
   public final static native void delete_DB(long jarg1);
   public final static native void delete_Iterator(long jarg1);
+  public final static native long DestroyDB(String jarg1, long jarg2, Options jarg2_);
+  public final static native long RepairDB(String jarg1, long jarg2, Options jarg2_);
   public final static native void DBWriteBatch_wb_set(long jarg1, DBWriteBatch jarg1_, long jarg2, WriteBatch jarg2_);
   public final static native long DBWriteBatch_wb_get(long jarg1, DBWriteBatch jarg1_);
   public final static native void DBWriteBatch_Put(long jarg1, DBWriteBatch jarg1_, String jarg2, String jarg3);

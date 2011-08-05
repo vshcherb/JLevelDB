@@ -1,5 +1,6 @@
 package com.anvisics.jleveldb;
 
+
 /**
  * Serializes custom arrays of strings into string using [,] notation with quotation character \ 
  * Examples : [1, 2, 3, [4, 5]]
@@ -15,14 +16,19 @@ public class ArraySerializer {
 	
 	
 	public static class EntityValueTokenizer {
-		private String tokenize = "";
-		private int lastReadIndex = 0;
-		private String value = tokenize;
-		private boolean firstElementAfterArrayOpened = false;
+		private String tokenize;
+		private int lastReadIndex;
+		private String value;
+		private boolean firstElementAfterArrayOpened;
+		
+		public EntityValueTokenizer(){
+			tokenize("");
+		}
 		public void tokenize(String v){
 			lastReadIndex = 0;
 			tokenize = v;
 			value = "";
+			firstElementAfterArrayOpened = false;
 		}
 		
 		public int next(){
@@ -138,7 +144,8 @@ public class ArraySerializer {
 		// serialization
 		StringBuilder builder = new StringBuilder();
 		boolean first = true;
-		for (String st : comments) {
+		for(int i=0; i< comments.length; i++){
+			String st = comments[i];
 			if (st.equals("[")) {
 				startArray(builder, first);
 				first = true;
@@ -163,6 +170,7 @@ public class ArraySerializer {
 	
 	private static void testCases(){
 		testCase("[1,2,[]]", new String[] {"[", "1", "2", "[", "]", "]"});
+		testCase("[[1,2],[1,2]]", new String[] {"[", "[","1", "2", "]","[","1", "2", "]", "]"});
 		
 		// quotation
 		testCase("[1, 2, 4,[1,3\\,4]]", new String[] {"[", "1", " 2", " 4", "[", "1", "3,4","]", "]"});
@@ -184,12 +192,12 @@ public class ArraySerializer {
 		testCase("\\[1\\,2", new String[] {"[1,2"});
 		System.out.println("All is successfull");
 		
+		
 	}
 	
-//	public static void main(String[] args) {
-//		testCases();
-//	}
+	public static void main(String[] args) {
+		testCases();
+	}
 	
 	
-
 }

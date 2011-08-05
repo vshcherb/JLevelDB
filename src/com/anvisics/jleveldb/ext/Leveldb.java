@@ -9,4 +9,12 @@
 package com.anvisics.jleveldb.ext;
 
 public class Leveldb {
+  public static Status DestroyDB(String name, Options options) {
+    return new Status(LeveldbJNI.DestroyDB(name, Options.getCPtr(options), options), true);
+  }
+
+  public static Status RepairDB(String dbname, Options options) {
+    return new Status(LeveldbJNI.RepairDB(dbname, Options.getCPtr(options), options), true);
+  }
+
 }

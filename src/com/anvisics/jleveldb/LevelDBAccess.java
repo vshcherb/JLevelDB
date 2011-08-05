@@ -10,7 +10,7 @@ import com.anvisics.jleveldb.ext.DBAccessor;
 
 public class LevelDBAccess {
 	
-	private static Boolean loaded = null;
+	public static Boolean loaded = null;
 	
 	public static boolean load() {
         if (loaded != null) return loaded == Boolean.TRUE;
