@@ -6,18 +6,22 @@ That project provides tiny access to library making transparent access to C++ [c
 How to build
 --------------------
 Checkout the project and run in command line : 
+
 * 'make' - checkout leveldb project from svn, compile it and build ready to use jar.
 
 Build is only tested under Linux. 
 Possible problems : 
-* no internet connection to checkout leveldb from googlecode
-* leveldb can not be built under certain environment (under Cygwin in Windows)
+
+* No internet connection to checkout leveldb from googlecode
+* 'leveldb' can not be built under certain environment (under Cygwin in Windows)
 * JAVA_HOME variable is not defined
-* swig is not installed
+* [swig](http://www.swig.org/) is not installed
 
 What is not supported
 --------------------
-There are some things still not supp
+There are some things not supported from C++ [API](http://code.google.com/p/leveldb/source/browse/#svn%2Ftrunk%2Finclude%2Fleveldb) : 
+
+* 
 
 Contribution
 --------------------
