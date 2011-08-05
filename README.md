@@ -41,7 +41,7 @@ What is to be verified and implemented
 There are some operations not linked with C++ [API](http://code.google.com/p/leveldb/source/browse/#svn%2Ftrunk%2Finclude%2Fleveldb) : 
 
 * [Comparator](http://code.google.com/p/leveldb/source/browse/trunk/include/leveldb/comparator.h) - important enough (callback)
-* [TableBuilder](http://code.google.com/p/leveldb/source/browse/trunk/include/leveldb/table_builder.h) and [Table](http://code.google.com/p/leveldb/source/browse/trunk/include/leveldb/table.h) - should be verified and properly tested. There is no default API to read Table from middle of file but it can be implemented. 
+* [TableBuilder](http://code.google.com/p/leveldb/source/browse/trunk/include/leveldb/table_builder.h) and [Table](http://code.google.com/p/leveldb/source/browse/trunk/include/leveldb/table.h) - should be properly tested. There is no default API to read Table from middle of file but it can be implemented. 
 
 
 Is it really needed ?

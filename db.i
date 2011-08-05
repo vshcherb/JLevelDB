@@ -11,10 +11,6 @@
 %}
 
 namespace leveldb {
-  %nodefaultctor;
-  
-  class Iterator {
-  };
   
   %nodefaultdtor Snapshot;
   class Snapshot {
@@ -98,8 +94,10 @@ namespace leveldb {
   
   
   struct ReadOptions {
+  	
   	%rename(verifyChecksums) verify_checksums;
 	bool verify_checksums;
+	
 	%rename(fillCache) fill_cache;
     bool fill_cache;
 
@@ -137,8 +135,9 @@ namespace leveldb {
    
    class DBIterator {
        friend class DBAccessor;
-       Iterator* it;
-       DBIterator(Iterator* i) {
+       friend class DBTable;
+       leveldb::Iterator* it;
+       DBIterator(leveldb::Iterator* i) {
          it = i;
        }
        public :
@@ -175,13 +174,13 @@ namespace leveldb {
 	class DBTable {
 	   private :
 	     leveldb::Table* table;
+	     DBTable(){};
  	   public :
  	     static DBTable* open(const Options& options, std::string filename,
  	     			long long fileSize) {
  	        leveldb::Table* t;
  	        RandomAccessFile* raf;
  	        Env* env = Env::Default();
- 	        
  	        Status fileSt = env -> NewRandomAccessFile(filename, &raf);
  	        if(!fileSt.ok()){
  	           return NULL;
@@ -201,7 +200,10 @@ namespace leveldb {
  	     	delete table;
  	     }
  	      
-  		 Iterator* newIterator(const ReadOptions& opts) { table -> NewIterator(opts); }
+  		 DBIterator* newIterator(const ReadOptions& opts) {
+  		   leveldb::Iterator* iterator =  table -> NewIterator(opts);
+  		   return new DBIterator(iterator); 
+  		 }
 
          long long approximateOffsetOf(const std::string& key) { table -> ApproximateOffsetOf(Slice(key)); }
    };

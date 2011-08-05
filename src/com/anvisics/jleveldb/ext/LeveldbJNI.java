@@ -9,7 +9,7 @@
 package com.anvisics.jleveldb.ext;
 
 class LeveldbJNI {
-  public final static native void delete_Iterator(long jarg1);
+  public final static native long new_Snapshot();
   public final static native long new_WriteOptions();
   public final static native void WriteOptions_sync_set(long jarg1, WriteOptions jarg1_, boolean jarg2);
   public final static native boolean WriteOptions_sync_get(long jarg1, WriteOptions jarg1_);
@@ -70,7 +70,6 @@ class LeveldbJNI {
   public final static native void delete_DBTable(long jarg1);
   public final static native long DBTable_newIterator(long jarg1, DBTable jarg1_, long jarg2, ReadOptions jarg2_);
   public final static native long DBTable_approximateOffsetOf(long jarg1, DBTable jarg1_, String jarg2);
-  public final static native long new_DBTable();
   public final static native long new_DBTableBuilder(long jarg1, Options jarg1_);
   public final static native void delete_DBTableBuilder(long jarg1);
   public final static native long DBTableBuilder_setOptions(long jarg1, DBTableBuilder jarg1_, long jarg2, Options jarg2_);

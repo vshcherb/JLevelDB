@@ -40,17 +40,13 @@ public class DBTable {
     return (cPtr == 0) ? null : new DBTable(cPtr, false);
   }
 
-  public Iterator newIterator(ReadOptions opts) {
+  public DBIterator newIterator(ReadOptions opts) {
     long cPtr = LeveldbJNI.DBTable_newIterator(swigCPtr, this, ReadOptions.getCPtr(opts), opts);
-    return (cPtr == 0) ? null : new Iterator(cPtr, false);
+    return (cPtr == 0) ? null : new DBIterator(cPtr, false);
   }
 
   public long approximateOffsetOf(String key) {
     return LeveldbJNI.DBTable_approximateOffsetOf(swigCPtr, this, key);
-  }
-
-  public DBTable() {
-    this(LeveldbJNI.new_DBTable(), true);
   }
 
 }
