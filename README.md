@@ -1,4 +1,4 @@
-JavaLevelDB is java bridge to C library [leveldb](http://code.google.com/p/leveldb/).
+JavaLevelDB is java bridge to C++ library [leveldb](http://code.google.com/p/leveldb/).
 ========
 LevelDB is a fast key-value storage library written at Google that provides an ordered mapping from string keys to string values.
 That project provides tiny access to library making transparent access to C++ [classes](http://code.google.com/p/leveldb/source/browse/#svn%2Ftrunk%2Finclude%2Fleveldb) through Java facade.
@@ -16,7 +16,7 @@ Possible problems :
 * JAVA_HOME variable is not defined
 * [swig](http://www.swig.org/) is not installed
 
-Usage
+How to use
 -----------
 
 To do put example.
@@ -35,7 +35,7 @@ There are some things not supported from C++ [API](http://code.google.com/p/leve
 implement, probably it can be only one environment that goes to standard Java functions?
 
 
-Not obvious if that is needed ? 
+Is it really needed ? 
 
 * [Cleanup Function of Iterator](http://code.google.com/p/leveldb/source/browse/trunk/include/leveldb/iterator.h)
 * [Options +](http://code.google.com/p/leveldb/source/browse/trunk/include/leveldb/options.h) - requires additional entity to be implemented such as Snapshot, Environment, Logger. 
