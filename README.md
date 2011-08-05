@@ -19,11 +19,27 @@ Possible problems :
 How to use
 -----------
 
-To do put example.
+	// Loads library to corresponding OS if it is not loaded exception is thrown
+	// Before library is loaded you can not create any object!
+	// Library can be loaded in class initializator :  `static { boolean loaded = LevelDBAccess.load(); }`
+	DBAccessor dbAccessor = LevelDBAccess.getDBAcessor();
+	
+	Options options = new Options();
+	options.setCreateIfMissing(true);
+	Status status = dbAccessor.open(options, "filepath");
+	
+	if (status.ok()) {
+		WriteOptions opts = new WriteOptions();
+		ReadOptions ro = new ReadOptions();
+		dbAccessor.put(opts, "key", "value");
+		assert "value".equals(dbAccessor.get(ro, "key"));
+	}
+	
 
 What is not supported
 --------------------
-There are some things not supported from C++ [API](http://code.google.com/p/leveldb/source/browse/#svn%2Ftrunk%2Finclude%2Fleveldb) : 
+There are some operations not linked with C++ [API](http://code.google.com/p/leveldb/source/browse/#svn%2Ftrunk%2Finclude%2Fleveldb) : 
+
 * [TableBuilder](http://code.google.com/p/leveldb/source/browse/trunk/include/leveldb/table_builder.h) and [Table](http://code.google.com/p/leveldb/source/browse/trunk/include/leveldb/table.h) - important enough to be implemented.
 * [Comparator](http://code.google.com/p/leveldb/source/browse/trunk/include/leveldb/comparator.h) - important enough (callback)
 
@@ -31,19 +47,34 @@ Is it really needed ?
 
 * [Cache](http://code.google.com/p/leveldb/source/browse/trunk/include/leveldb/cache.h) - own implementation of cache 
 * [Environment](http://code.google.com/p/leveldb/source/browse/trunk/include/leveldb/env.h) - own implementation of RandomAccessFile, SequentialFile,...
-* [Cleanup Function of Iterator](http://code.google.com/p/leveldb/source/browse/trunk/include/leveldb/iterator.h)
-* [Options +](http://code.google.com/p/leveldb/source/browse/trunk/include/leveldb/options.h) - requires additional entity to be implemented such as Snapshot, Environment, Logger. 
+* [Cleanup Function of Iterator](http://code.google.com/p/leveldb/source/browse/trunk/include/leveldb/iterator.h) 
 * [WriteBatch Iterator](http://code.google.com/p/leveldb/source/browse/trunk/include/leveldb/write_batch.h) - iterate over entities to be writen
 
-Something missed?
 
 Contribution
 --------------------
-Please feel free to make for and provide your pull requests :)
+Please feel free to make forks and provide your pull requests :)
 
 
 Additional
 --------------------
 
+That project provides very fast ArraySerializer that allows to store array of strings into string. The stream parser processes String in place and not allocate new memory.
+With that helper you can serialize/deserialize every data structure like as array of arrays or map (as doubled array).
+The format of serialization is pretty simple : `[Value, Value2, [ Value3 ]]`. It also supports quotation of important for deserialization characters. 
 
+	int next;
+	EntityValueTokenizer tokenizer = new EntityValueTokenizer();
+	tokenizer.tokenize(value);
+
+	while ((next = tokenizer.next()) != END) {
+		if (next == ELEMENT) {
+			// TODO process element 
+			String value = tokenizer.value();
+		} else if (next == START_ARRAY) {
+			// TODO process start of inner array
+		} else if (next == END_ARRAY) {
+			// TODO process end of array
+		}
+	}
 

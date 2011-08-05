@@ -13,7 +13,7 @@ public class TestDBAccess {
 		DBAccessor dbAccessor = LevelDBAccess.getDBAcessor();
 		Options options = new Options();
 		options.setCreateIfMissing(true);
-		Status status = dbAccessor.open(options, "/home/victor/projects/OsmAnd/navigation_ws/JavaLevelDB/db");
+		Status status = dbAccessor.open(options, "tmp/JavaLevelDB/db");
 
 		if (!status.ok()) {
 			System.out.println(status.ToString());
@@ -29,7 +29,6 @@ public class TestDBAccess {
 		for (int i = 5; i < 1000; i++) {
 			updates.Put(i+"", (i * i) + "");
 		}
-
 		dbAccessor.write(opts, updates);
 		updates.delete();
 		ro.setVerifyChecksums(true);
