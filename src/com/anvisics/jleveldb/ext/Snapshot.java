@@ -31,8 +31,4 @@ public class Snapshot {
     }
   }
 
-  public Snapshot() {
-    this(LeveldbJNI.new_Snapshot(), true);
-  }
-
 }

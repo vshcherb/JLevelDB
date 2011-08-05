@@ -5,13 +5,49 @@
 #include "leveldb/write_batch.h"
 #include "leveldb/db.h"
 #include "leveldb/env.h"
+#include "leveldb/comparator.h"
 #include "leveldb/table_builder.h"
 #include "leveldb/table.h"
 #include "leveldb/options.h"
 %}
 
+
+%{
+ namespace leveldb {
+   class UserComparator : private Comparator {
+     private : 
+        std::string comparatorName; 
+        int (*comparatorFunc)(const std::string& a, const std::string& b);
+     public :   
+        UserComparator(std::string name, int (*c)(const std::string& a, const std::string& b)) : comparatorName(name){
+            this-> comparatorFunc = c;
+        }
+         
+        // If *start < limit, changes *start to a short string in [start,limit).
+   	    void FindShortestSeparator(std::string* start, const Slice& limit) {
+   	      // Does nothing that's correct to allow optimization 
+   	    }
+   	  
+   	    // Changes *key to a short string >= *key.
+   	    void FindShortSuccessor(std::string* key) {
+   	      // Does nothing that's correct to allow optimization
+   	    }
+   	    int Compare(const leveldb::Slice& a, const leveldb::Slice& b) const {
+           return 0; 
+        }
+     
+        
+        const char* Name() const {
+           return comparatorName.c_str();
+        }
+   };
+  }
+%}
+
+
 namespace leveldb {
   
+  %nodefaultctor;
   %nodefaultdtor Snapshot;
   class Snapshot {
   };
@@ -30,7 +66,6 @@ namespace leveldb {
     // DB::ReleaseSnapshot(*post_write_snapshotsnapshot) when the
     // snapshot is no longer needed.
     // Default: NULL
-    
     %rename(postWriteSnapshot) post_write_snapshot;
     const Snapshot** post_write_snapshot;
     
@@ -90,6 +125,9 @@ namespace leveldb {
     int block_restart_interval;
   
     CompressionType compression;
+    
+    // const Comparator* comparator;
+  
   };
   
   
@@ -115,7 +153,8 @@ namespace leveldb {
 
 %inline %{
  namespace leveldb {
- 
+    
+   
    class DBWriteBatch {
       friend class DBAccessor;
       private : 
@@ -207,6 +246,7 @@ namespace leveldb {
 
          long long approximateOffsetOf(const std::string& key) { table -> ApproximateOffsetOf(Slice(key)); }
    };
+   
    
    class DBTableBuilder {
        TableBuilder* tableBuilder;

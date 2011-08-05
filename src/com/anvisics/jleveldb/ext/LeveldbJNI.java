@@ -9,7 +9,6 @@
 package com.anvisics.jleveldb.ext;
 
 class LeveldbJNI {
-  public final static native long new_Snapshot();
   public final static native long new_WriteOptions();
   public final static native void WriteOptions_sync_set(long jarg1, WriteOptions jarg1_, boolean jarg2);
   public final static native boolean WriteOptions_sync_get(long jarg1, WriteOptions jarg1_);
