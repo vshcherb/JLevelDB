@@ -9,8 +9,6 @@
 package com.anvisics.jleveldb.ext;
 
 class LeveldbJNI {
-  public final static native void delete_WriteBatch(long jarg1);
-  public final static native void delete_DB(long jarg1);
   public final static native void delete_Iterator(long jarg1);
   public final static native long new_WriteOptions();
   public final static native void WriteOptions_sync_set(long jarg1, WriteOptions jarg1_, boolean jarg2);
@@ -53,8 +51,6 @@ class LeveldbJNI {
   public final static native void delete_ReadOptions(long jarg1);
   public final static native long DestroyDB(String jarg1, long jarg2, Options jarg2_);
   public final static native long RepairDB(String jarg1, long jarg2, Options jarg2_);
-  public final static native void DBWriteBatch_wb_set(long jarg1, DBWriteBatch jarg1_, long jarg2, WriteBatch jarg2_);
-  public final static native long DBWriteBatch_wb_get(long jarg1, DBWriteBatch jarg1_);
   public final static native void DBWriteBatch_Put(long jarg1, DBWriteBatch jarg1_, String jarg2, String jarg3);
   public final static native void DBWriteBatch_Delete(long jarg1, DBWriteBatch jarg1_, String jarg2);
   public final static native void DBWriteBatch_Clear(long jarg1, DBWriteBatch jarg1_);
@@ -70,8 +66,22 @@ class LeveldbJNI {
   public final static native String DBIterator_key(long jarg1, DBIterator jarg1_);
   public final static native String DBIterator_value(long jarg1, DBIterator jarg1_);
   public final static native long DBIterator_status(long jarg1, DBIterator jarg1_);
-  public final static native void DBAccessor_pointer_set(long jarg1, DBAccessor jarg1_, long jarg2, DB jarg2_);
-  public final static native long DBAccessor_pointer_get(long jarg1, DBAccessor jarg1_);
+  public final static native long DBTable_open(long jarg1, Options jarg1_, String jarg2, long jarg3);
+  public final static native void delete_DBTable(long jarg1);
+  public final static native long DBTable_newIterator(long jarg1, DBTable jarg1_, long jarg2, ReadOptions jarg2_);
+  public final static native long DBTable_approximateOffsetOf(long jarg1, DBTable jarg1_, String jarg2);
+  public final static native long new_DBTable();
+  public final static native long new_DBTableBuilder(long jarg1, Options jarg1_);
+  public final static native void delete_DBTableBuilder(long jarg1);
+  public final static native long DBTableBuilder_setOptions(long jarg1, DBTableBuilder jarg1_, long jarg2, Options jarg2_);
+  public final static native long DBTableBuilder_getStatus(long jarg1, DBTableBuilder jarg1_);
+  public final static native long DBTableBuilder_open(long jarg1, DBTableBuilder jarg1_, String jarg2);
+  public final static native long DBTableBuilder_add(long jarg1, DBTableBuilder jarg1_, String jarg2, String jarg3);
+  public final static native void DBTableBuilder_flush(long jarg1, DBTableBuilder jarg1_);
+  public final static native long DBTableBuilder_numEntries(long jarg1, DBTableBuilder jarg1_);
+  public final static native long DBTableBuilder_fileSize(long jarg1, DBTableBuilder jarg1_);
+  public final static native long DBTableBuilder_finish(long jarg1, DBTableBuilder jarg1_);
+  public final static native void DBTableBuilder_abandon(long jarg1, DBTableBuilder jarg1_);
   public final static native void DBAccessor_lastStatus_set(long jarg1, DBAccessor jarg1_, long jarg2, Status jarg2_);
   public final static native long DBAccessor_lastStatus_get(long jarg1, DBAccessor jarg1_);
   public final static native long DBAccessor_open(long jarg1, DBAccessor jarg1_, long jarg2, Options jarg2_, String jarg3);

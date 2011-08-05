@@ -35,15 +35,6 @@ public class DBAccessor {
     }
   }
 
-  public void setPointer(DB value) {
-    LeveldbJNI.DBAccessor_pointer_set(swigCPtr, this, DB.getCPtr(value), value);
-  }
-
-  public DB getPointer() {
-    long cPtr = LeveldbJNI.DBAccessor_pointer_get(swigCPtr, this);
-    return (cPtr == 0) ? null : new DB(cPtr, false);
-  }
-
   public void setLastStatus(Status value) {
     LeveldbJNI.DBAccessor_lastStatus_set(swigCPtr, this, Status.getCPtr(value), value);
   }

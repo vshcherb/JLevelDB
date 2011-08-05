@@ -8,16 +8,16 @@
 
 package com.anvisics.jleveldb.ext;
 
-public class DBWriteBatch {
+public class DBTable {
   private long swigCPtr;
   protected boolean swigCMemOwn;
 
-  protected DBWriteBatch(long cPtr, boolean cMemoryOwn) {
+  protected DBTable(long cPtr, boolean cMemoryOwn) {
     swigCMemOwn = cMemoryOwn;
     swigCPtr = cPtr;
   }
 
-  protected static long getCPtr(DBWriteBatch obj) {
+  protected static long getCPtr(DBTable obj) {
     return (obj == null) ? 0 : obj.swigCPtr;
   }
 
@@ -29,26 +29,28 @@ public class DBWriteBatch {
     if (swigCPtr != 0) {
       if (swigCMemOwn) {
         swigCMemOwn = false;
-        LeveldbJNI.delete_DBWriteBatch(swigCPtr);
+        LeveldbJNI.delete_DBTable(swigCPtr);
       }
       swigCPtr = 0;
     }
   }
 
-  public void Put(String key, String value) {
-    LeveldbJNI.DBWriteBatch_Put(swigCPtr, this, key, value);
+  public static DBTable open(Options options, String filename, long fileSize) {
+    long cPtr = LeveldbJNI.DBTable_open(Options.getCPtr(options), options, filename, fileSize);
+    return (cPtr == 0) ? null : new DBTable(cPtr, false);
   }
 
-  public void Delete(String key) {
-    LeveldbJNI.DBWriteBatch_Delete(swigCPtr, this, key);
+  public Iterator newIterator(ReadOptions opts) {
+    long cPtr = LeveldbJNI.DBTable_newIterator(swigCPtr, this, ReadOptions.getCPtr(opts), opts);
+    return (cPtr == 0) ? null : new Iterator(cPtr, false);
   }
 
-  public void Clear() {
-    LeveldbJNI.DBWriteBatch_Clear(swigCPtr, this);
+  public long approximateOffsetOf(String key) {
+    return LeveldbJNI.DBTable_approximateOffsetOf(swigCPtr, this, key);
   }
 
-  public DBWriteBatch() {
-    this(LeveldbJNI.new_DBWriteBatch(), true);
+  public DBTable() {
+    this(LeveldbJNI.new_DBTable(), true);
   }
 
 }

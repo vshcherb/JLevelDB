@@ -4,16 +4,15 @@
 %{
 #include "leveldb/write_batch.h"
 #include "leveldb/db.h"
+#include "leveldb/env.h"
+#include "leveldb/table_builder.h"
+#include "leveldb/table.h"
 #include "leveldb/options.h"
 %}
 
 namespace leveldb {
   %nodefaultctor;
-  class WriteBatch {
-  };
   
-  class DB {
-  };
   class Iterator {
   };
   
@@ -119,10 +118,11 @@ namespace leveldb {
 %inline %{
  namespace leveldb {
  
- 
    class DBWriteBatch {
-      public:
+      friend class DBAccessor;
+      private : 
        WriteBatch wb;
+      public :
        // Store the mapping "key->value" in the database.
        void Put(const char* key, const char* value) {
           wb.Put(Slice(key), Slice(value));
@@ -170,11 +170,118 @@ namespace leveldb {
          // If an error has occurred, return it.  Else return an ok status.
          Status status() { return it->status(); }
    };
+   
+   
+	class DBTable {
+	   private :
+	     leveldb::Table* table;
+ 	   public :
+ 	     static DBTable* open(const Options& options, std::string filename,
+ 	     			long long fileSize) {
+ 	        leveldb::Table* t;
+ 	        RandomAccessFile* raf;
+ 	        Env* env = Env::Default();
+ 	        
+ 	        Status fileSt = env -> NewRandomAccessFile(filename, &raf);
+ 	        if(!fileSt.ok()){
+ 	           return NULL;
+ 	        }
+ 	        
+ 	     	Status st = leveldb::Table::Open(options, raf, fileSize, &t);
+ 	     	if(!st.ok()) {
+ 	     	   delete raf;
+ 	     	   return NULL;
+ 	     	}
+ 	     	DBTable* dt = new DBTable;
+ 	     	dt -> table = t;
+ 	     	return dt;
+ 	     }
+ 	     
+ 	     ~DBTable() {
+ 	     	delete table;
+ 	     }
+ 	      
+  		 Iterator* newIterator(const ReadOptions& opts) { table -> NewIterator(opts); }
 
+         long long approximateOffsetOf(const std::string& key) { table -> ApproximateOffsetOf(Slice(key)); }
+   };
+   
+   class DBTableBuilder {
+       TableBuilder* tableBuilder;
+       WritableFile* wf;
+       Options opts;
+     public :
+       DBTableBuilder(const Options& options) {
+           opts = options;
+       }
+       
+       ~DBTableBuilder() {
+          if(tableBuilder) {
+             finish();
+          }
+       }
+       
+       Status setOptions(const Options& options) {
+           opts = options;
+           if(!tableBuilder) {
+           	  return Status::OK();
+           } else {
+              return tableBuilder -> ChangeOptions(options);
+           }
+       }
+       
+       Status getStatus() {
+           if(!tableBuilder) {
+           	  return Status::OK();
+           }
+           return tableBuilder -> status();
+       }
+       
+       // open file to append to it
+       Status open(const std::string& fname) {
+           Env* env = Env::Default();
+           Status st = env -> NewWritableFile(fname, &wf);
+           if(st.ok()){
+               tableBuilder = new TableBuilder(opts, wf);
+           }
+           return st;
+       } 
+       
+       Status add(std::string key, std::string value) {
+       		tableBuilder -> Add(Slice(key), Slice(value));
+       		return tableBuilder -> status();
+       } 
+       
+  	   
+  	   void flush() { tableBuilder -> Flush(); }
+  	   
+  	   long long numEntries() { int64_t ui = tableBuilder -> NumEntries(); return ui;}
+  	   
+  	   long long fileSize() { int64_t ui = tableBuilder -> FileSize();  return ui;} 
+
+  
+  	   Status finish() {
+  	       if(!tableBuilder) {
+  	       	   return Status::OK();
+  	       }
+  	       Status res =  tableBuilder -> Finish();
+  	       delete tableBuilder;
+  	       delete wf;
+  	       return res;
+  	   }
+  	   
+  	   void abandon() {
+  	        if(tableBuilder) {
+  	       	   tableBuilder -> Abandon();
+  	       }
+  	   }
+   };
 
    class DBAccessor {
+     private :
+       leveldb::DB* pointer;
+     
      public :
-     DB* pointer;
      Status lastStatus;
      Status open(const Options& options,
                      const std::string& name) {
@@ -230,8 +337,7 @@ namespace leveldb {
             // char* causes memory leak in generated cpp
             return "";
          }
-      }
-      
+      }      
   };
   
   Snapshot* getSnapshotValue(Snapshot** p) {
