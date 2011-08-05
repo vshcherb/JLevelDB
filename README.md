@@ -36,12 +36,12 @@ implement, probably it can be only one environment that goes to standard Java fu
 
 
 Not obvious if that is needed ? 
+
 * [Cleanup Function of Iterator](http://code.google.com/p/leveldb/source/browse/trunk/include/leveldb/iterator.h)
 * [Options +](http://code.google.com/p/leveldb/source/browse/trunk/include/leveldb/options.h) - requires additional entity to be implemented such as Snapshot, Environment, Logger. 
 * [WriteBatch Iterator](http://code.google.com/p/leveldb/source/browse/trunk/include/leveldb/write_batch.h) - iterate over entities to be writen
 
 Something missed?
-
 
 Contribution
 --------------------
