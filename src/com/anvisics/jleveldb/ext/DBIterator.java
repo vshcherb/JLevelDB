@@ -35,28 +35,28 @@ public class DBIterator {
     }
   }
 
-  public boolean Valid() {
-    return LeveldbJNI.DBIterator_Valid(swigCPtr, this);
+  public boolean valid() {
+    return LeveldbJNI.DBIterator_valid(swigCPtr, this);
   }
 
-  public void SeekToFirst() {
-    LeveldbJNI.DBIterator_SeekToFirst(swigCPtr, this);
+  public void seekToFirst() {
+    LeveldbJNI.DBIterator_seekToFirst(swigCPtr, this);
   }
 
-  public void SeekToLast() {
-    LeveldbJNI.DBIterator_SeekToLast(swigCPtr, this);
+  public void seekToLast() {
+    LeveldbJNI.DBIterator_seekToLast(swigCPtr, this);
   }
 
-  public void Seek(String str) {
-    LeveldbJNI.DBIterator_Seek(swigCPtr, this, str);
+  public void seek(String str) {
+    LeveldbJNI.DBIterator_seek(swigCPtr, this, str);
   }
 
-  public void Next() {
-    LeveldbJNI.DBIterator_Next(swigCPtr, this);
+  public void next() {
+    LeveldbJNI.DBIterator_next(swigCPtr, this);
   }
 
-  public void Prev() {
-    LeveldbJNI.DBIterator_Prev(swigCPtr, this);
+  public void prev() {
+    LeveldbJNI.DBIterator_prev(swigCPtr, this);
   }
 
   public String key() {

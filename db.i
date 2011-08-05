@@ -8,15 +8,36 @@
 %}
 
 namespace leveldb {
+  %nodefaultctor;
+  class WriteBatch {
+  };
+  
+  class DB {
+  };
+  class Iterator {
+  };
+  
+  %nodefaultdtor Snapshot;
+  class Snapshot {
+  };
+  %clearnodefaultctor;
 
   struct WriteOptions {
     WriteOptions();
    
     // Default: false
     bool sync;
-   
+
+	   
+    // If "post_write_snapshot" is non-NULL, and the write succeeds,
+    // *post_write_snapshot will be modified to point to a snapshot of
+    // the DB state immediately after this write.  The caller must call
+    // DB::ReleaseSnapshot(*post_write_snapshotsnapshot) when the
+    // snapshot is no longer needed.
     // Default: NULL
-    //const Snapshot** post_write_snapshot;
+    
+    %rename(postWriteSnapshot) post_write_snapshot;
+    const Snapshot** post_write_snapshot;
    };
    
 
@@ -26,6 +47,7 @@ namespace leveldb {
     bool ok();
 
     // Returns true iff the status indicates a NotFound error.
+    %rename(isNotFound) IsNotFound;
     bool IsNotFound();
 
     std::string ToString();
@@ -42,26 +64,33 @@ namespace leveldb {
   struct Options {
     Options();
 
+    %rename(createIfMissing) create_if_missing;
     bool create_if_missing;
 
     // Default: false
+    %rename(errorIfExists) error_if_exists;
     bool error_if_exists;
 
     // Default: false
+    %rename(paranoidChecks) paranoid_checks;
     bool paranoid_checks;
   
     // Default: 4MB
+    %rename(writeBufferSize) write_buffer_size;
     size_t write_buffer_size;
 
     // Default: 1000
+    %rename(maxOpenFiles) max_open_files;
     int max_open_files;
 
     // Cache* block_cache;
 
     // Default: 4K
+    %rename(blockSize) block_size;
     size_t block_size;
     
     // Default: 16
+    %rename(blockRestartInterval) block_restart_interval;
     int block_restart_interval;
   
     CompressionType compression;
@@ -69,22 +98,14 @@ namespace leveldb {
   
   
   struct ReadOptions {
+  	%rename(verifyChecksums) verify_checksums;
 	bool verify_checksums;
+	%rename(fillCache) fill_cache;
     bool fill_cache;
 
     // Default: NULL
-    //const Snapshot* snapshot;
+    const Snapshot* snapshot;
   };
-  
-  %nodefaultctor;
-  class WriteBatch {
-  };
-  
-  class DB {
-  };
-  class Iterator {
-  };
-  %clearnodefaultctor;
   
   // Destroy the contents of the specified database.
   // Be very careful using this method.
@@ -122,29 +143,26 @@ namespace leveldb {
        public :
        ~DBIterator() { delete it; } 
          // An iterator is either positioned at a key/value pair, or not valid.  
-         bool Valid() { return it->Valid(); }
+         bool valid() { return it->Valid(); }
          
-         void SeekToFirst() { return it->SeekToFirst(); }
+         void seekToFirst() { return it->SeekToFirst(); }
          
-         void SeekToLast() { return it->SeekToLast(); }
+         void seekToLast() { return it->SeekToLast(); }
          
-         void Seek(const std::string& str) { return it->Seek(Slice(str)); }
+         void seek(const std::string& str) { return it->Seek(Slice(str)); }
   
          // REQUIRES: Valid()       
-         void Next() { return it-> Next(); }
+         void next() { return it-> Next(); }
          
          // REQUIRES: Valid()
          // After this call, Valid() istrue iff the iterator was not positioned at the first entry in source.
-         void Prev() { return it-> Prev(); }
+         void prev() { return it-> Prev(); }
          
          // REQUIRES: Valid()
          std::string key() { return it->key().ToString(); }
          
          // REQUIRES: !AtEnd() && !AtStart()
          std::string value() {
-                // be very strict because ToString can be destroyed
-                // std::string str(it->value().data(), it->value().size());
-         		// return str;
          		return it->value().ToString();
           }
          
@@ -153,44 +171,69 @@ namespace leveldb {
    };
 
 
-
    class DBAccessor {
      public :
      DB* pointer;
      Status lastStatus;
-     Status Open(const Options& options,
+     Status open(const Options& options,
                      const std::string& name) {
 	    return DB::Open(options, name, &pointer);
      }
      
-     std::string Get(const ReadOptions& options, char const* key) {
+     std::string get(const ReadOptions& options, char const* key) {
           std::string val;
           lastStatus = pointer -> Get(options, Slice(key), &val);
           return val;
       }
        
-      Status Write(const WriteOptions& options, DBWriteBatch& updates) {
-          lastStatus=pointer -> Write(options, &updates.wb);
+      Status write(const WriteOptions& options, DBWriteBatch& updates) {
+          lastStatus = pointer -> Write(options, &updates.wb);
           return lastStatus;
       } 
       
-      Status Put(const WriteOptions& options, const std::string key, const std::string value) {
-          lastStatus=pointer -> Put(options, Slice(key), Slice(value));
+      Status put(const WriteOptions& options, const std::string key, const std::string value) {
+          lastStatus = pointer -> Put(options, Slice(key), Slice(value));
           return lastStatus;
       }
-      
-      Status Delete(const WriteOptions& options, const std::string key) {
-           lastStatus=pointer -> Delete(options, Slice(key));
+            
+      Status remove(const WriteOptions& options, const std::string key) {
+           lastStatus = pointer -> Delete(options, Slice(key));
            return lastStatus;
       }
        
       // Return a heap-allocated iterator over the contents of the database.
   	  // Caller should delete the iterator when it is no longer needed.
-      DBIterator* NewIterator(const ReadOptions& options) {
+      DBIterator* newIterator(const ReadOptions& options) {
          return new DBIterator(pointer -> NewIterator(options));
       };
+      
+      // Return a handle to the current DB state.  Iterators created with
+      // this handle will all observe a stable snapshot of the current DB
+      // state.  The caller must call ReleaseSnapshot(result) when the snapshot is no longer needed.
+      const Snapshot* getSnapshot() {
+         return pointer -> GetSnapshot();
+      };
+      
+      // Release a previously acquired snapshot.  The caller must not
+  	  // use "snapshot" after this call.
+      void releaseSnapshot(const Snapshot* snapshot) {
+         pointer -> ReleaseSnapshot(snapshot);
+      };
+      
+      std::string getProperty(std::string property) {
+      	 std::string value;
+         if(pointer ->GetProperty(Slice(property),&value)) {
+            return value;
+         } else {
+            // Can't return null in that case because of std::string
+            // char* causes memory leak in generated cpp
+            return "";
+         }
+      }
+      
   };
 
  }
+ 
 %}
 

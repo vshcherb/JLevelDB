@@ -35,20 +35,29 @@ public class ReadOptions {
     }
   }
 
-  public void setVerify_checksums(boolean value) {
-    LeveldbJNI.ReadOptions_verify_checksums_set(swigCPtr, this, value);
+  public void setVerifyChecksums(boolean value) {
+    LeveldbJNI.ReadOptions_verifyChecksums_set(swigCPtr, this, value);
   }
 
-  public boolean getVerify_checksums() {
-    return LeveldbJNI.ReadOptions_verify_checksums_get(swigCPtr, this);
+  public boolean getVerifyChecksums() {
+    return LeveldbJNI.ReadOptions_verifyChecksums_get(swigCPtr, this);
   }
 
-  public void setFill_cache(boolean value) {
-    LeveldbJNI.ReadOptions_fill_cache_set(swigCPtr, this, value);
+  public void setFillCache(boolean value) {
+    LeveldbJNI.ReadOptions_fillCache_set(swigCPtr, this, value);
   }
 
-  public boolean getFill_cache() {
-    return LeveldbJNI.ReadOptions_fill_cache_get(swigCPtr, this);
+  public boolean getFillCache() {
+    return LeveldbJNI.ReadOptions_fillCache_get(swigCPtr, this);
+  }
+
+  public void setSnapshot(Snapshot value) {
+    LeveldbJNI.ReadOptions_snapshot_set(swigCPtr, this, Snapshot.getCPtr(value), value);
+  }
+
+  public Snapshot getSnapshot() {
+    long cPtr = LeveldbJNI.ReadOptions_snapshot_get(swigCPtr, this);
+    return (cPtr == 0) ? null : new Snapshot(cPtr, false);
   }
 
   public ReadOptions() {

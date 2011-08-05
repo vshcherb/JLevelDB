@@ -39,60 +39,60 @@ public class Options {
     this(LeveldbJNI.new_Options(), true);
   }
 
-  public void setCreate_if_missing(boolean value) {
-    LeveldbJNI.Options_create_if_missing_set(swigCPtr, this, value);
+  public void setCreateIfMissing(boolean value) {
+    LeveldbJNI.Options_createIfMissing_set(swigCPtr, this, value);
   }
 
-  public boolean getCreate_if_missing() {
-    return LeveldbJNI.Options_create_if_missing_get(swigCPtr, this);
+  public boolean getCreateIfMissing() {
+    return LeveldbJNI.Options_createIfMissing_get(swigCPtr, this);
   }
 
-  public void setError_if_exists(boolean value) {
-    LeveldbJNI.Options_error_if_exists_set(swigCPtr, this, value);
+  public void setErrorIfExists(boolean value) {
+    LeveldbJNI.Options_errorIfExists_set(swigCPtr, this, value);
   }
 
-  public boolean getError_if_exists() {
-    return LeveldbJNI.Options_error_if_exists_get(swigCPtr, this);
+  public boolean getErrorIfExists() {
+    return LeveldbJNI.Options_errorIfExists_get(swigCPtr, this);
   }
 
-  public void setParanoid_checks(boolean value) {
-    LeveldbJNI.Options_paranoid_checks_set(swigCPtr, this, value);
+  public void setParanoidChecks(boolean value) {
+    LeveldbJNI.Options_paranoidChecks_set(swigCPtr, this, value);
   }
 
-  public boolean getParanoid_checks() {
-    return LeveldbJNI.Options_paranoid_checks_get(swigCPtr, this);
+  public boolean getParanoidChecks() {
+    return LeveldbJNI.Options_paranoidChecks_get(swigCPtr, this);
   }
 
-  public void setWrite_buffer_size(long value) {
-    LeveldbJNI.Options_write_buffer_size_set(swigCPtr, this, value);
+  public void setWriteBufferSize(long value) {
+    LeveldbJNI.Options_writeBufferSize_set(swigCPtr, this, value);
   }
 
-  public long getWrite_buffer_size() {
-    return LeveldbJNI.Options_write_buffer_size_get(swigCPtr, this);
+  public long getWriteBufferSize() {
+    return LeveldbJNI.Options_writeBufferSize_get(swigCPtr, this);
   }
 
-  public void setMax_open_files(int value) {
-    LeveldbJNI.Options_max_open_files_set(swigCPtr, this, value);
+  public void setMaxOpenFiles(int value) {
+    LeveldbJNI.Options_maxOpenFiles_set(swigCPtr, this, value);
   }
 
-  public int getMax_open_files() {
-    return LeveldbJNI.Options_max_open_files_get(swigCPtr, this);
+  public int getMaxOpenFiles() {
+    return LeveldbJNI.Options_maxOpenFiles_get(swigCPtr, this);
   }
 
-  public void setBlock_size(long value) {
-    LeveldbJNI.Options_block_size_set(swigCPtr, this, value);
+  public void setBlockSize(long value) {
+    LeveldbJNI.Options_blockSize_set(swigCPtr, this, value);
   }
 
-  public long getBlock_size() {
-    return LeveldbJNI.Options_block_size_get(swigCPtr, this);
+  public long getBlockSize() {
+    return LeveldbJNI.Options_blockSize_get(swigCPtr, this);
   }
 
-  public void setBlock_restart_interval(int value) {
-    LeveldbJNI.Options_block_restart_interval_set(swigCPtr, this, value);
+  public void setBlockRestartInterval(int value) {
+    LeveldbJNI.Options_blockRestartInterval_set(swigCPtr, this, value);
   }
 
-  public int getBlock_restart_interval() {
-    return LeveldbJNI.Options_block_restart_interval_get(swigCPtr, this);
+  public int getBlockRestartInterval() {
+    return LeveldbJNI.Options_blockRestartInterval_get(swigCPtr, this);
   }
 
   public void setCompression(CompressionType value) {

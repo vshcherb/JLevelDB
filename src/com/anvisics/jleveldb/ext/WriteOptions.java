@@ -47,4 +47,13 @@ public class WriteOptions {
     return LeveldbJNI.WriteOptions_sync_get(swigCPtr, this);
   }
 
+  public void setPostWriteSnapshot(SWIGTYPE_p_p_leveldb__Snapshot value) {
+    LeveldbJNI.WriteOptions_postWriteSnapshot_set(swigCPtr, this, SWIGTYPE_p_p_leveldb__Snapshot.getCPtr(value));
+  }
+
+  public SWIGTYPE_p_p_leveldb__Snapshot getPostWriteSnapshot() {
+    long cPtr = LeveldbJNI.WriteOptions_postWriteSnapshot_get(swigCPtr, this);
+    return (cPtr == 0) ? null : new SWIGTYPE_p_p_leveldb__Snapshot(cPtr, false);
+  }
+
 }

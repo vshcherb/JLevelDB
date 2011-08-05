@@ -12,8 +12,8 @@ public class TestDBAccess {
 	public static void main(String[] args) {
 		DBAccessor dbAccessor = LevelDBAccess.getDBAcessor();
 		Options options = new Options();
-		options.setCreate_if_missing(true);
-		Status status = dbAccessor.Open(options, "/home/victor/projects/OsmAnd/navigation_ws/JavaLevelDB/db");
+		options.setCreateIfMissing(true);
+		Status status = dbAccessor.open(options, "/home/victor/projects/OsmAnd/navigation_ws/JavaLevelDB/db");
 
 		if (!status.ok()) {
 			System.out.println(status.ToString());
@@ -27,24 +27,23 @@ public class TestDBAccess {
 		DBWriteBatch updates = new DBWriteBatch();
 
 		for (int i = 5; i < 1000; i++) {
-			// dbAccessor.Put(opts, i + "", (i * i) + "фыва");
-			updates.Put(i+"", (i * i) + "[[275830317,275830320,275830323,275830325,275830317],{\"building	\":\"yes\",\"addr:street\":\"Партизанский просп.\",\"addr:housenumber\":\"152\"}]");
+			updates.Put(i+"", (i * i) + "");
 		}
 
-		dbAccessor.Write(opts, updates);
+		dbAccessor.write(opts, updates);
 		updates.delete();
-		ro.setVerify_checksums(true);
+		ro.setVerifyChecksums(true);
 		for (int i = 0; i < 10; i++) {
-			String value = dbAccessor.Get(ro, i + "");
+			String value = dbAccessor.get(ro, i + "");
 			System.out.println(value);
 		}
 
-		DBIterator it = dbAccessor.NewIterator(ro);
-		it.SeekToFirst();
+		DBIterator it = dbAccessor.newIterator(ro);
+		it.seekToFirst();
 		
 		for (int i = 0; i < 10; i++) {
 			System.out.println(it.key() + "\t\t\t" + it.value());
-			it.Next();
+			it.next();
 		}
 
 		it.delete();

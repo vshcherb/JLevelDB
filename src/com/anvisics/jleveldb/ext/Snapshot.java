@@ -8,47 +8,27 @@
 
 package com.anvisics.jleveldb.ext;
 
-public class Status {
+public class Snapshot {
   private long swigCPtr;
   protected boolean swigCMemOwn;
 
-  protected Status(long cPtr, boolean cMemoryOwn) {
+  protected Snapshot(long cPtr, boolean cMemoryOwn) {
     swigCMemOwn = cMemoryOwn;
     swigCPtr = cPtr;
   }
 
-  protected static long getCPtr(Status obj) {
+  protected static long getCPtr(Snapshot obj) {
     return (obj == null) ? 0 : obj.swigCPtr;
-  }
-
-  protected void finalize() {
-    delete();
   }
 
   public synchronized void delete() {
     if (swigCPtr != 0) {
       if (swigCMemOwn) {
         swigCMemOwn = false;
-        LeveldbJNI.delete_Status(swigCPtr);
+        throw new UnsupportedOperationException("C++ destructor does not have public access");
       }
       swigCPtr = 0;
     }
-  }
-
-  public boolean ok() {
-    return LeveldbJNI.Status_ok(swigCPtr, this);
-  }
-
-  public boolean isNotFound() {
-    return LeveldbJNI.Status_isNotFound(swigCPtr, this);
-  }
-
-  public String ToString() {
-    return LeveldbJNI.Status_ToString(swigCPtr, this);
-  }
-
-  public Status() {
-    this(LeveldbJNI.new_Status(), true);
   }
 
 }

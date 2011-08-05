@@ -53,29 +53,42 @@ public class DBAccessor {
     return (cPtr == 0) ? null : new Status(cPtr, false);
   }
 
-  public Status Open(Options options, String name) {
-    return new Status(LeveldbJNI.DBAccessor_Open(swigCPtr, this, Options.getCPtr(options), options, name), true);
+  public Status open(Options options, String name) {
+    return new Status(LeveldbJNI.DBAccessor_open(swigCPtr, this, Options.getCPtr(options), options, name), true);
   }
 
-  public String Get(ReadOptions options, String key) {
-    return LeveldbJNI.DBAccessor_Get(swigCPtr, this, ReadOptions.getCPtr(options), options, key);
+  public String get(ReadOptions options, String key) {
+    return LeveldbJNI.DBAccessor_get(swigCPtr, this, ReadOptions.getCPtr(options), options, key);
   }
 
-  public Status Write(WriteOptions options, DBWriteBatch updates) {
-    return new Status(LeveldbJNI.DBAccessor_Write(swigCPtr, this, WriteOptions.getCPtr(options), options, DBWriteBatch.getCPtr(updates), updates), true);
+  public Status write(WriteOptions options, DBWriteBatch updates) {
+    return new Status(LeveldbJNI.DBAccessor_write(swigCPtr, this, WriteOptions.getCPtr(options), options, DBWriteBatch.getCPtr(updates), updates), true);
   }
 
-  public Status Put(WriteOptions options, String key, String value) {
-    return new Status(LeveldbJNI.DBAccessor_Put(swigCPtr, this, WriteOptions.getCPtr(options), options, key, value), true);
+  public Status put(WriteOptions options, String key, String value) {
+    return new Status(LeveldbJNI.DBAccessor_put(swigCPtr, this, WriteOptions.getCPtr(options), options, key, value), true);
   }
 
-  public Status Delete(WriteOptions options, String key) {
-    return new Status(LeveldbJNI.DBAccessor_Delete(swigCPtr, this, WriteOptions.getCPtr(options), options, key), true);
+  public Status remove(WriteOptions options, String key) {
+    return new Status(LeveldbJNI.DBAccessor_remove(swigCPtr, this, WriteOptions.getCPtr(options), options, key), true);
   }
 
-  public DBIterator NewIterator(ReadOptions options) {
-    long cPtr = LeveldbJNI.DBAccessor_NewIterator(swigCPtr, this, ReadOptions.getCPtr(options), options);
+  public DBIterator newIterator(ReadOptions options) {
+    long cPtr = LeveldbJNI.DBAccessor_newIterator(swigCPtr, this, ReadOptions.getCPtr(options), options);
     return (cPtr == 0) ? null : new DBIterator(cPtr, false);
+  }
+
+  public Snapshot getSnapshot() {
+    long cPtr = LeveldbJNI.DBAccessor_getSnapshot(swigCPtr, this);
+    return (cPtr == 0) ? null : new Snapshot(cPtr, false);
+  }
+
+  public void releaseSnapshot(Snapshot snapshot) {
+    LeveldbJNI.DBAccessor_releaseSnapshot(swigCPtr, this, Snapshot.getCPtr(snapshot), snapshot);
+  }
+
+  public String getProperty(String property) {
+    return LeveldbJNI.DBAccessor_getProperty(swigCPtr, this, property);
   }
 
   public DBAccessor() {
