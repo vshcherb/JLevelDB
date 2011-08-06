@@ -27,18 +27,22 @@ build/$(LIBNAME) : build/obj build/obj/db_wrap.o
 
 build/obj : build/$(leveldb)/Makefile
 	cd build/$(leveldb) && $(MAKE) -f Makefile
-	mkdir build/obj 
+	@mkdir -p build/obj 
 	cd build/obj && ar -x ../$(leveldb)/libleveldb.a 
 
-build/$(leveldb)/Makefile :
-	svn checkout http://leveldb.googlecode.com/svn/trunk/ build/$(leveldb)
+$(leveldb)-svn : 	
+	svn checkout http://leveldb.googlecode.com/svn/trunk/ $(leveldb)-svn
+
+build/$(leveldb)/Makefile : $(leveldb)-svn
+	@mkdir -p build
+	cp $(leveldb)-svn/ build/$(leveldb)/ -r
 
 build/obj/db_wrap.o : build/db_wrap.cpp
 	$(CC) $(CFLAGS) -Ibuild/leveldb/include/ build/db_wrap.cpp -o build/obj/db_wrap.o; 
 	
 build/db_wrap.cpp : db.i
 	rm -rf src/com/anvisics/jleveldb/ext
-	mkdir src/com/anvisics/jleveldb/ext
+	@mkdir -p src/com/anvisics/jleveldb/ext
 	swig -c++ -java -package com.anvisics.jleveldb.ext -outdir src/com/anvisics/jleveldb/ext -o build/db_wrap.cpp db.i;
 	
 build/$(jleveldb).jar: $(java_classes) build/$(LIBNAME)
