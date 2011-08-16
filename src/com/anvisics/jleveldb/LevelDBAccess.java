@@ -62,7 +62,8 @@ public class LevelDBAccess {
 
             loaded = Boolean.TRUE;
             return true;
-        } catch (Exception e) { e.printStackTrace();}
+        } catch (Exception e) { e.printStackTrace(); } 
+          catch (UnsatisfiedLinkError e) { } // fall through
 
         loaded = Boolean.FALSE;
         return false;
